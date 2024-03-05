@@ -45,7 +45,7 @@ export class AuthService {
 
   async logIn({ userEmail, password }: LogInDto) {
     const command = new InitiateAuthCommand({
-      ClientId: this.clientId,
+      ClientId: await this.clientId,
       AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
       AuthParameters: {
         USERNAME: userEmail,
@@ -69,7 +69,7 @@ export class AuthService {
 
   async signUp({ userEmail, password, phoneNumber }: SignInDto) {
     const command = new SignUpCommand({
-      ClientId: this.clientId,
+      ClientId: await this.clientId,
       Username: userEmail,
       Password: password,
       UserAttributes: [
@@ -94,7 +94,7 @@ export class AuthService {
 
   async verifyEmail({ userEmail, confirmationCode }: VerifyEmailDto) {
     const command = new ConfirmSignUpCommand({
-      ClientId: this.clientId,
+      ClientId: await this.clientId,
       Username: userEmail,
       ConfirmationCode: confirmationCode,
     });
@@ -106,6 +106,8 @@ export class AuthService {
       this.logger.error(error);
       if (error instanceof InvalidParameterException)
         throw new BadRequestException(error.message);
+      if (error instanceof NotAuthorizedException)
+        throw new BadRequestException(error.message);
       if (error instanceof UserNotFoundException)
         throw new BadRequestException(error.message);
       throw new InternalServerError(error.message);
@@ -114,7 +116,7 @@ export class AuthService {
 
   async forgotPassword({ userEmail }: ForgotPasswordDto) {
     const command = new ForgotPasswordCommand({
-      ClientId: this.clientId,
+      ClientId: await this.clientId,
       Username: userEmail,
     });
     try {
@@ -134,7 +136,7 @@ export class AuthService {
     password,
   }: ConfirmPasswordDto) {
     const command = new ConfirmForgotPasswordCommand({
-      ClientId: this.clientId,
+      ClientId: await this.clientId,
       Username: userEmail,
       Password: password,
       ConfirmationCode: confirmationCode,
@@ -160,7 +162,7 @@ export class AuthService {
 
   async resendConfirmationCode({ userEmail }: ResendConfirmationCodeDto) {
     const command = new ResendConfirmationCodeCommand({
-      ClientId: this.clientId,
+      ClientId: await this.clientId,
       Username: userEmail,
     });
     try {
@@ -170,13 +172,15 @@ export class AuthService {
       this.logger.error(error);
       if (error instanceof UserNotFoundException)
         throw new BadRequestException(error.message);
+      if (error instanceof InvalidParameterException)
+        throw new BadRequestException(error.message);
       throw new InternalServerError(error.message);
     }
   }
 
   async addUsertoGroup({ userEmail, groupName }: AddUsertoGroupDto) {
     const command = new AdminAddUserToGroupCommand({
-      UserPoolId: this.userPoolId,
+      UserPoolId: await this.userPoolId,
       Username: userEmail,
       GroupName: groupName,
     });
