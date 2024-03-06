@@ -8,6 +8,11 @@ import { validateConfig } from './config/configuration-valitation';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MerchantsModule } from './merchants/merchants.module';
 import { CognitoAuthModule } from '@nestjs-cognito/auth';
+import { AppointmentsModule } from './appointments/appointments.module';
+import { ServicesModule } from './services/services.module';
+import { Merchant } from './merchants/entities/merchant.entity';
+import { Appointment } from './appointments/entities/appointment.entity';
+import { Service } from './services/entities/service.entity';
 
 @Module({
   imports: [
@@ -27,6 +32,7 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
         username: await configService.get('database.username'),
         password: await configService.get('database.password'),
         database: await configService.get('database.name'),
+        entities: [Merchant, Appointment, Service],
         synchronize: true,
         ssl: {
           rejectUnauthorized: false,
@@ -46,6 +52,8 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
       }),
     }),
     MerchantsModule,
+    AppointmentsModule,
+    ServicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

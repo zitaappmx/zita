@@ -19,12 +19,12 @@ export class MerchantsService {
     return this.merchantRepository.find();
   }
   findOne(merchantId: string) {
-    return this.merchantRepository.findOneBy({ merchantId });
+    return this.merchantRepository.findOneBy({ id: merchantId });
   }
-  update(id: string, updateMerchantDto: UpdateMerchantDto) {
-    return this.merchantRepository.update(id, updateMerchantDto);
+  update(merchantId: string, updateMerchantDto: UpdateMerchantDto) {
+    return this.merchantRepository.update(merchantId, updateMerchantDto);
   }
-  remove(id: string) {
-    return this.merchantRepository.delete(id);
+  remove(merchantId: string) {
+    return this.merchantRepository.delete(merchantId);
   }
 }
