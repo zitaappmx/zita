@@ -27,11 +27,11 @@ import { CognitoAuthModule } from '@nestjs-cognito/auth';
         username: await configService.get('database.username'),
         password: await configService.get('database.password'),
         database: await configService.get('database.name'),
-        entities: [],
         synchronize: true,
         ssl: {
           rejectUnauthorized: false,
         },
+        autoLoadEntities: true,
       }),
     }),
     CognitoAuthModule.registerAsync({
