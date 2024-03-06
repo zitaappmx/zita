@@ -22,6 +22,8 @@ import {
   ResendConfirmationCodeCommand,
   AuthFlowType,
   AdminAddUserToGroupCommand,
+  GetUserCommand,
+  AdminGetUserCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { SignInDto } from './dto/signIn.dto';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
@@ -31,6 +33,8 @@ import { ConfirmPasswordDto } from './dto/confirmPassword.dto';
 import { LogInDto } from './dto/logIn.dto';
 import { ResendConfirmationCodeDto } from './dto/resendConfirmationCode.dto';
 import { AddUsertoGroupDto, AppGroups } from './dto/addUsertoGroup.dto';
+import { GetUserInfo } from './dto/getUserInfo.dto';
+import { GetUserInfoById } from './dto/getUserInfoById.dto';
 
 @Injectable()
 export class AuthService {
@@ -93,24 +97,18 @@ export class AuthService {
   }
 
   async verifyEmail({ userEmail, confirmationCode }: VerifyEmailDto) {
-    const command = new ConfirmSignUpCommand({
-      ClientId: await this.clientId,
-      Username: userEmail,
-      ConfirmationCode: confirmationCode,
-    });
     try {
-      const response = this.userPool.send(command);
+      const command = new ConfirmSignUpCommand({
+        ClientId: await this.clientId,
+        Username: userEmail,
+        ConfirmationCode: confirmationCode,
+      });
+      const response = await this.userPool.send(command);
       await this.addUsertoGroup({ userEmail, groupName: AppGroups.admin });
       return response;
     } catch (error) {
       this.logger.error(error);
-      if (error instanceof InvalidParameterException)
-        throw new BadRequestException(error.message);
-      if (error instanceof NotAuthorizedException)
-        throw new BadRequestException(error.message);
-      if (error instanceof UserNotFoundException)
-        throw new BadRequestException(error.message);
-      throw new InternalServerError(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -184,7 +182,40 @@ export class AuthService {
       Username: userEmail,
       GroupName: groupName,
     });
-    const response = await this.userPool.send(command);
-    return response;
+    try {
+      const response = await this.userPool.send(command);
+      return response;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerError(error);
+    }
+  }
+
+  async getUserInfo({ bearerToken }: GetUserInfo) {
+    const accessToken = bearerToken.split(' ')[1];
+    const command = new GetUserCommand({
+      AccessToken: accessToken,
+    });
+    try {
+      const response = await this.userPool.send(command);
+      return response;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerError(error);
+    }
+  }
+
+  async getUserInfoById({ username }: GetUserInfoById) {
+    const command = new AdminGetUserCommand({
+      UserPoolId: await this.userPoolId,
+      Username: username,
+    });
+    try {
+      const response = await this.userPool.send(command);
+      return response;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerError(error);
+    }
   }
 }

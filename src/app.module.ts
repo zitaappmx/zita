@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/configuration';
 import { validateConfig } from './config/configuration-valitation';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MerchantsModule } from './merchants/merchants.module';
+import { CognitoAuthModule } from '@nestjs-cognito/auth';
 
 @Module({
   imports: [
@@ -32,6 +34,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         },
       }),
     }),
+    CognitoAuthModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        jwtVerifier: {
+          userPoolId: await configService.get('cognito.userPoolId'),
+          clientId: await configService.get('cognito.userPoolClientId'),
+          tokenUse: 'access',
+        },
+      }),
+    }),
+    MerchantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

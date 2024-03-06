@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Headers, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signIn.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -45,5 +45,15 @@ export class AuthController {
     return await this.authService.resendConfirmationCode(
       resendConfirmationCodeDto,
     );
+  }
+
+  @Get('user')
+  async getUserInfo(@Headers('Authorization') bearerToken: string) {
+    return await this.authService.getUserInfo({ bearerToken });
+  }
+
+  @Get('user/:userId')
+  async getUserInfoById(@Param('userId') username: string) {
+    return await this.authService.getUserInfoById({ username });
   }
 }
