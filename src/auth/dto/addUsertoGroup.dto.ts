@@ -2,9 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsEnum } from 'class-validator';
 
 export enum AppGroups {
+  superAdmin = 'Zita-SuperAdminGroup',
   admin = 'Zita-AdminGroup',
   manager = 'Zita-ManagerGroup',
-  cashier = 'Zita-EmployeeGroup',
+  employee = 'Zita-EmployeeGroup',
+  client = 'Zita-ClientGroup',
 }
 
 export class AddUsertoGroupDto {

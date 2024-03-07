@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateAppointmentDto } from './dto/createAppointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,11 +20,25 @@ export class AppointmentsService {
     return `This action returns all appointments`;
   }
 
+  async findAllByMerchant(merchantId: string) {
+    try {
+      return this.appointmentRepository.find({
+        relations: ['services'],
+        where: {
+          merchant: { id: merchantId },
+        },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} appointment`;
   }
 
   update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
+    console.log(updateAppointmentDto);
     return `This action updates a #${id} appointment`;
   }
 

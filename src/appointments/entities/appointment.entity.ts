@@ -1,5 +1,6 @@
 import { Merchant } from 'src/merchants/entities/merchant.entity';
 import { Service } from 'src/services/entities/service.entity';
+import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
   Column,
@@ -21,6 +22,9 @@ export class Appointment {
 
   @ManyToOne(() => Merchant, (merchant) => merchant.appointments)
   merchant: Merchant;
+
+  @ManyToOne(() => User, (user) => user.appointments)
+  user: User;
 
   @ManyToMany(() => Service)
   @JoinTable()
