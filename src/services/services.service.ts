@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { CreateServiceDto } from './dto/createService.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { Service } from './entities/service.entity';
@@ -7,12 +11,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ServicesService {
+  private readonly logger = new Logger(ServicesService.name);
+
   constructor(
     @InjectRepository(Service)
     private serviceRepository: Repository<Service>,
   ) {}
-  create(createServiceDto: CreateServiceDto) {
-    return this.serviceRepository.save(createServiceDto);
+  async create(createServiceDto: CreateServiceDto) {
+    try {
+      return await this.serviceRepository.save(createServiceDto);
+    } catch (error) {
+      this.logger.error(error.message);
+      throw new InternalServerErrorException(error.message);
+    }
   }
 
   findAll() {
@@ -24,6 +35,7 @@ export class ServicesService {
   }
 
   update(id: number, updateServiceDto: UpdateServiceDto) {
+    console.log(updateServiceDto);
     return `This action updates a #${id} service`;
   }
 

@@ -1,6 +1,7 @@
+import { Client } from 'src/client/entities/client.entity';
+import { Employee } from 'src/employees/entities/employee.entity';
 import { Merchant } from 'src/merchants/entities/merchant.entity';
 import { Service } from 'src/services/entities/service.entity';
-import { User } from 'src/users/entities/user.entity';
 import {
   Entity,
   Column,
@@ -23,8 +24,11 @@ export class Appointment {
   @ManyToOne(() => Merchant, (merchant) => merchant.appointments)
   merchant: Merchant;
 
-  @ManyToOne(() => User, (user) => user.appointments)
-  user: User;
+  @ManyToOne(() => Client, (client) => client.appointments)
+  client: Client;
+
+  @ManyToOne(() => Employee, (employee) => employee.appointments)
+  employee: Employee;
 
   @ManyToMany(() => Service)
   @JoinTable()

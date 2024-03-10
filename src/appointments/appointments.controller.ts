@@ -9,30 +9,39 @@ import {
 } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/createAppointment.dto';
-import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { UpdateAppointmentDto } from './dto/updateAppointment.dto';
 
 @Controller('appointments')
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
 
+  // @Authorization({
+  //   allowedGroups: [
+  //     AppGroups.superAdmin,
+  //     AppGroups.admin,
+  //     AppGroups.manager,
+  //     AppGroups.employee,
+  //     AppGroups.client,
+  //   ],
+  // })
   @Post()
   create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return this.appointmentsService.create(createAppointmentDto);
   }
 
+  // @Authorization({
+  //   allowedGroups: [
+  //     AppGroups.superAdmin,
+  //   ],
+  // })
   @Get()
   findAll() {
     return this.appointmentsService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.appointmentsService.findOne(+id);
-  // }
-
   @Get(':id')
-  findOneByMerchantId(@Param('id') id: string) {
-    return this.appointmentsService.findAllByMerchant(id);
+  findOne(@Param('id') id: string) {
+    return this.appointmentsService.findOne(id);
   }
 
   @Patch(':id')
@@ -40,11 +49,11 @@ export class AppointmentsController {
     @Param('id') id: string,
     @Body() updateAppointmentDto: UpdateAppointmentDto,
   ) {
-    return this.appointmentsService.update(+id, updateAppointmentDto);
+    return this.appointmentsService.update(id, updateAppointmentDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.appointmentsService.remove(+id);
+    return this.appointmentsService.remove(id);
   }
 }

@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { AppGroups } from '../../auth/dto/addUsertoGroup.dto';
 
-export class CreateUserDto {
+export class CreateClientDto {
   @ApiProperty()
   @IsPhoneNumber()
   phoneNumber: string;

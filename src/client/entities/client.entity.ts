@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Client {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -31,7 +31,7 @@ export class User {
   @Column()
   group: string;
 
-  @OneToMany(() => Appointment, (appointment) => appointment.user)
+  @OneToMany(() => Appointment, (appointment) => appointment.client)
   appointments: Appointment[];
 
   @CreateDateColumn()

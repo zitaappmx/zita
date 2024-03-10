@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -27,7 +28,6 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider';
 import { SignInDto } from './dto/signIn.dto';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
-import { InternalServerError } from '@aws-sdk/client-ssm';
 import { ForgotPasswordDto } from './dto/forgotPassword.dto';
 import { ConfirmPasswordDto } from './dto/confirmPassword.dto';
 import { LogInDto } from './dto/logIn.dto';
@@ -67,7 +67,7 @@ export class AuthService {
         throw new UnauthorizedException(error.message);
       if (error instanceof UserNotFoundException)
         throw new UnauthorizedException(error.message);
-      throw new InternalServerError(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -92,7 +92,7 @@ export class AuthService {
         throw new ConflictException(error.message);
       if (error instanceof InvalidParameterException)
         throw new BadRequestException(error.message);
-      throw new InternalServerError(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -124,7 +124,7 @@ export class AuthService {
       this.logger.error(error);
       if (error instanceof UserNotFoundException)
         throw new BadRequestException(error.message);
-      throw new InternalServerError(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -154,7 +154,7 @@ export class AuthService {
         throw new BadRequestException(error.message);
       if (error instanceof UserNotFoundException)
         throw new BadRequestException(error.message);
-      throw new InternalServerError(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -172,7 +172,7 @@ export class AuthService {
         throw new BadRequestException(error.message);
       if (error instanceof InvalidParameterException)
         throw new BadRequestException(error.message);
-      throw new InternalServerError(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -187,7 +187,7 @@ export class AuthService {
       return response;
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerError(error);
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -201,7 +201,7 @@ export class AuthService {
       return response;
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerError(error);
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -215,7 +215,7 @@ export class AuthService {
       return response;
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerError(error);
+      throw new InternalServerErrorException(error);
     }
   }
 }
