@@ -4,7 +4,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { CreateClientDto } from './dto/createClient.dto';
-import { UpdateClientDto } from './dto/update-client.dto';
+import { UpdateClientDto } from './dto/updateClient.dto';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
