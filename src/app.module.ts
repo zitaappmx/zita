@@ -37,11 +37,12 @@ import { Employee } from './employees/entities/employee.entity';
         password: await configService.get('database.password'),
         database: await configService.get('database.name'),
         entities: [Merchant, Appointment, Service, Client, Employee],
-        synchronize: true,
+        synchronize: false,
         ssl: {
           rejectUnauthorized: false,
         },
         autoLoadEntities: true,
+        connectTimeoutMS: 4000,
       }),
     }),
     CognitoAuthModule.registerAsync({

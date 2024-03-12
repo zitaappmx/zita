@@ -16,6 +16,7 @@ export class AWSInfrastructure {
       this.logger.log(`Getting SSM Param: ${paramName}`);
       const command = new GetParameterCommand(params);
       const response = await this.ssmClient.send(command);
+      this.logger.log(`Got SSM Param: ${paramName}`);
       return response.Parameter.Value;
     } catch (error) {
       this.logger.error(`Error retrieving secret: ${error}`);
